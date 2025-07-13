@@ -41,7 +41,6 @@ public class OauthTokensController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        // Extract token values
         String accessToken = client.getAccessToken().getTokenValue();
         Instant expiresAt = client.getAccessToken().getExpiresAt();
         Instant issuedAt = client.getAccessToken().getIssuedAt();
