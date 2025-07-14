@@ -1,6 +1,6 @@
 package com.spotify.api.services;
 
-import com.spotify.api.OauthTokensException;
+import com.spotify.api.CustomException;
 import com.spotify.api.models.OauthTokensModel;
 import com.spotify.api.repositories.OauthTokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +22,16 @@ public class OauthTokensService {
     public List<OauthTokensModel> getAllOauthTokens () {
         try {
             return oauthTokensRepository.findAll();
-        } catch (OauthTokensException ex) {
-            throw new OauthTokensException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (CustomException  ex) {
+            throw new CustomException (ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     public OauthTokensModel createOauthTokens (OauthTokensModel oauthTokensModel) {
         try {
             return oauthTokensRepository.save(oauthTokensModel);
-        } catch (OauthTokensException ex) {
-            throw new OauthTokensException("Error saving oauth tokens: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (CustomException  ex) {
+            throw new CustomException ("Error saving oauth tokens: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
