@@ -1,6 +1,7 @@
 package com.spotify.api.controllers;
 
-import com.spotify.api.DTOs.ItemsSearchRequestDTO;
+import com.spotify.api.CustomException;
+import com.spotify.api.DTOs.*;
 import com.spotify.api.services.SpotifyForDevelopersAPIService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,38 +25,61 @@ public class SpotifyForDevelopersAPIController {
     }
 
     @GetMapping("/me/top/artists")
-    public ResponseEntity<Object> getTopArtists(Authentication authentication, @RequestParam(defaultValue = "10") int limit) {
+    public ResponseEntity<List<ArtistDTO>> getTopArtists(Authentication authentication, @RequestParam(defaultValue = "10") int limit) {
 
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
-        if (client == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
 
         String accessToken = client.getAccessToken().getTokenValue();
-        Object topArtists = spotifyForDevelopersAPIService.getTopArtists(accessToken, limit);
+        List<ArtistDTO> topArtists = spotifyForDevelopersAPIService.getTopArtists(accessToken, limit);
         return new ResponseEntity<>(topArtists, HttpStatus.OK);
     }
 
     @GetMapping("/artists/{id}")
-    public ResponseEntity<Object> getArtist(Authentication authentication, @PathVariable String id) {
+    public ResponseEntity<ArtistDTO> getArtist(Authentication authentication, @PathVariable String id) {
 
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
-        if (client == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
 
         String accessToken = client.getAccessToken().getTokenValue();
-        Object topArtists = spotifyForDevelopersAPIService.getArtist(accessToken, id);
-        return new ResponseEntity<>(topArtists, HttpStatus.OK);
+        ArtistDTO artist = spotifyForDevelopersAPIService.getArtist(accessToken, id);
+        return new ResponseEntity<>(artist, HttpStatus.OK);
+    }
+
+    @GetMapping("/artists/{id}/relatedArtists")
+    public ResponseEntity<RelatedArtistsDTO> getRelatedArtists(Authentication authentication, @PathVariable String id) {
+
+        OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
+
+        String accessToken = client.getAccessToken().getTokenValue();
+        RelatedArtistsDTO artist = spotifyForDevelopersAPIService.getRelatedArtists(accessToken);
+        return new ResponseEntity<>(artist, HttpStatus.OK);
+    }
+
+    @GetMapping("/artists/{artistId}/popularTracks")
+    public ResponseEntity<ArtistPopularTracksDTO> getArtistPopularTracks(Authentication authentication, @PathVariable String artistId) {
+        OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
+
+        String accessToken = client.getAccessToken().getTokenValue();
+        ArtistPopularTracksDTO artistTopTracks = spotifyForDevelopersAPIService.getArtistPopularTracks(accessToken, artistId);
+        return new ResponseEntity<>(artistTopTracks, HttpStatus.OK);
+    }
+
+    @GetMapping("/artists/{artistId}/albums")
+    public ResponseEntity<ArtistAlbumsResponseDTO> getArtistAlbums(Authentication authentication, @PathVariable String artistId, @RequestParam(defaultValue = "9") String limit) {
+        try {
+            OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
+            String accessToken = client.getAccessToken().getTokenValue();
+            ArtistAlbumsResponseDTO albums = spotifyForDevelopersAPIService.getArtistAlbums(accessToken, artistId, limit);
+            return new ResponseEntity<>(albums, HttpStatus.OK);
+        } catch (Exception ex) {
+            throw new CustomException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @GetMapping("/albums/{id}")
     public ResponseEntity<Object> getAlbum(Authentication authentication, @PathVariable String id) {
 
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
-        if (client == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
 
         String accessToken = client.getAccessToken().getTokenValue();
         Object topArtists = spotifyForDevelopersAPIService.getAlbum(accessToken, id);
@@ -65,30 +89,16 @@ public class SpotifyForDevelopersAPIController {
     @GetMapping("/search")
     public ResponseEntity<Object> searchItems(
             Authentication authentication,
-            @RequestParam String q, // The search query
+            @RequestParam String q,
             @RequestParam List<String> type)
     {
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
-        if (client == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
 
         String accessToken = client.getAccessToken().getTokenValue();
-
-        // Create the request DTO
         ItemsSearchRequestDTO searchRequest = new ItemsSearchRequestDTO(q, type);
 
-        try {
-            Object searchResults = spotifyForDevelopersAPIService.searchItem(accessToken, searchRequest);
-            return new ResponseEntity<>(searchResults, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace(); // Log the full stack trace for debugging
-            return new ResponseEntity<>("Error searching Spotify: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-
+        Object searchResults = spotifyForDevelopersAPIService.searchItem(accessToken, searchRequest);
+        return new ResponseEntity<>(searchResults, HttpStatus.OK);
     }
 
 }
