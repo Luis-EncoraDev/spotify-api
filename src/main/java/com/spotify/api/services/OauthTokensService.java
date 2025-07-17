@@ -5,8 +5,6 @@ import com.spotify.api.DTOs.NewRefreshTokenResponseDTO;
 import com.spotify.api.OauthTokensException;
 import com.spotify.api.models.OauthTokensModel;
 import com.spotify.api.repositories.OauthTokensRepository;
-import org.antlr.v4.runtime.misc.MultiMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
@@ -14,18 +12,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.reactive.function.BodyInserters;
-
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @Service
 public class OauthTokensService {
 
     private final OauthTokensRepository oauthTokensRepository;
-    private RestClient restClient;
+    private final RestClient restClient;
 
     @Value("${SPOTIFY_CLIENT_ID}")
     private String clientId;
@@ -33,7 +28,6 @@ public class OauthTokensService {
     @Value("${SPOTIFY_CLIENT_SECRET}")
     private String clientSecret;
 
-    @Autowired
     public OauthTokensService(OauthTokensRepository oauthTokensRepository, OAuth2AuthorizedClientManager authorizedClientManager) {
         this.oauthTokensRepository = oauthTokensRepository;
         this.restClient = RestClient.builder().build();
@@ -42,7 +36,7 @@ public class OauthTokensService {
     public List<OauthTokensModel> getAllOauthTokens () {
         try {
             return oauthTokensRepository.findAll();
-        } catch (CustomException  ex) {
+        } catch (Exception  ex) {
             throw new CustomException (ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -50,7 +44,7 @@ public class OauthTokensService {
     public OauthTokensModel createOauthTokens (OauthTokensModel oauthTokensModel) {
         try {
             return oauthTokensRepository.save(oauthTokensModel);
-        } catch (CustomException  ex) {
+        } catch (Exception  ex) {
             throw new CustomException ("Error saving oauth tokens: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
