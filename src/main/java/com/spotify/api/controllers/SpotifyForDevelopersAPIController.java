@@ -25,12 +25,12 @@ public class SpotifyForDevelopersAPIController {
     }
 
     @GetMapping("/me/top/artists")
-    public ResponseEntity<List<ArtistDTO>> getTopArtists(Authentication authentication, @RequestParam(defaultValue = "10") int limit) {
+    public ResponseEntity<TopArtistsResponseDTO> getTopArtists(Authentication authentication, @RequestParam(defaultValue = "10") int limit) {
 
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
 
         String accessToken = client.getAccessToken().getTokenValue();
-        List<ArtistDTO> topArtists = spotifyForDevelopersAPIService.getTopArtists(accessToken, limit);
+        TopArtistsResponseDTO topArtists = spotifyForDevelopersAPIService.getTopArtists(accessToken, limit);
         return new ResponseEntity<>(topArtists, HttpStatus.OK);
     }
 
@@ -77,13 +77,23 @@ public class SpotifyForDevelopersAPIController {
     }
 
     @GetMapping("/albums/{id}")
-    public ResponseEntity<Object> getAlbum(Authentication authentication, @PathVariable String id) {
+    public ResponseEntity<AlbumDTO> getAlbum(Authentication authentication, @PathVariable String id) {
 
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
 
         String accessToken = client.getAccessToken().getTokenValue();
-        Object topArtists = spotifyForDevelopersAPIService.getAlbum(accessToken, id);
-        return new ResponseEntity<>(topArtists, HttpStatus.OK);
+        AlbumDTO album = spotifyForDevelopersAPIService.getAlbum(accessToken, id);
+        return new ResponseEntity<>(album, HttpStatus.OK);
+    }
+
+    @GetMapping("/albums/{id}/tracks")
+    public ResponseEntity<AlbumTracksResponseDTO> getAlbumTracks(Authentication authentication, @PathVariable String id) {
+
+        OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
+
+        String accessToken = client.getAccessToken().getTokenValue();
+        AlbumTracksResponseDTO albumTracks = spotifyForDevelopersAPIService.getAlbumTracks(accessToken, id);
+        return new ResponseEntity<>(albumTracks, HttpStatus.OK);
     }
 
     @GetMapping("/search")

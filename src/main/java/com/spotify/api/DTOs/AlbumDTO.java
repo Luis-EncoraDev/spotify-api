@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,6 +14,7 @@ import java.util.List;
 public class AlbumDTO {
     private String id;
     private String name;
+    private int total_tracks;
     private List<ImageDTO> images;
     private String release_date;
 

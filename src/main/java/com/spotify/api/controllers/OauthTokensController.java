@@ -27,8 +27,9 @@ public class OauthTokensController {
     }
 
     @GetMapping("/getOauthTokens")
-    public List<OauthTokensModel> getAllOauthTokens() {
-        return oauthTokensService.getAllOauthTokens();
+    public ResponseEntity<List<OauthTokensModel>> getAllOauthTokens(Authentication authentication) {
+        List<OauthTokensModel> oauthTokens = oauthTokensService.getAllOauthTokens();
+        return new ResponseEntity<>(oauthTokens, HttpStatus.OK);
     }
 
     @PostMapping("/createTokens")
@@ -61,5 +62,13 @@ public class OauthTokensController {
 
         OauthTokensModel saved = oauthTokensService.createOauthTokens(tokenModel);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/deleteTokens")
+    public ResponseEntity<OauthTokensModel> deleteOauthTokens() {
+        List<OauthTokensModel> oauthTokensList = oauthTokensService.getAllOauthTokens();
+        OauthTokensModel oauthTokens = oauthTokensList.getFirst();
+        OauthTokensModel deletedOauthTokens = oauthTokensService.deleteOauthTokens(oauthTokens);
+        return new ResponseEntity<>(deletedOauthTokens, HttpStatus.OK);
     }
 }

@@ -13,10 +13,4 @@ import java.util.List;
 @NoArgsConstructor
 public class TopArtistsResponseDTO {
     private List<ArtistDTO> items;
-    private int total;
-    private int limit;
-    private int offset;
-    private String href;
-    private String next;
-    private String previous;
 }
