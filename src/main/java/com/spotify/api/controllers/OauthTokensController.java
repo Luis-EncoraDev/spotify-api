@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/oauthTokens")
@@ -27,8 +26,9 @@ public class OauthTokensController {
     }
 
     @GetMapping("/getOauthTokens")
-    public List<OauthTokensModel> getAllOauthTokens() {
-        return oauthTokensService.getAllOauthTokens();
+    public ResponseEntity<OauthTokensModel> getAllOauthTokens(Authentication authentication) {
+        OauthTokensModel oauthTokens = oauthTokensService.getOauthTokens(authentication.getName());
+        return new ResponseEntity<>(oauthTokens, HttpStatus.OK);
     }
 
     @PostMapping("/createTokens")
@@ -61,5 +61,12 @@ public class OauthTokensController {
 
         OauthTokensModel saved = oauthTokensService.createOauthTokens(tokenModel);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/deleteTokens")
+    public ResponseEntity<OauthTokensModel> deleteOauthTokens(Authentication authentication) {
+        OauthTokensModel oauthTokens = oauthTokensService.getOauthTokens(authentication.getName());
+        OauthTokensModel deletedOauthTokens = oauthTokensService.deleteOauthTokens(oauthTokens);
+        return new ResponseEntity<>(deletedOauthTokens, HttpStatus.OK);
     }
 }

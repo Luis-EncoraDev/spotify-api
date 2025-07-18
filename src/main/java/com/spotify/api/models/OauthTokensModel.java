@@ -18,7 +18,6 @@ public class OauthTokensModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String userId;
     private String accessToken;
     private String refreshToken;

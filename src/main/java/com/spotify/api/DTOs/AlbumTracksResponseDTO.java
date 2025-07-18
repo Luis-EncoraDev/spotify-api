@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 @Setter
-public class RelatedArtistsDTO {
-    List<ArtistDTO> artists;
+public class AlbumTracksResponseDTO {
+    private List<TrackDTO> items;
 }

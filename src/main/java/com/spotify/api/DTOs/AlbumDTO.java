@@ -15,6 +15,7 @@ import java.util.List;
 public class AlbumDTO {
     private String id;
     private String name;
+    private int total_tracks;
     private List<ImageDTO> images;
     private String release_date;
 

@@ -14,5 +14,6 @@ public class TrackDTO {
     private String name;
     private int duration_ms;
     private String preview_url;
+    private boolean is_playable;
     private AlbumDTO album;
 }
