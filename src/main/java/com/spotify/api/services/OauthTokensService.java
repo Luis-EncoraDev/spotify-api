@@ -12,9 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
-import java.util.Base64;
-import java.util.List;
 
+import java.util.Base64;
 
 @Service
 public class OauthTokensService {
@@ -33,23 +32,23 @@ public class OauthTokensService {
         this.restClient = RestClient.builder().build();
     }
 
-    public List<OauthTokensModel> getAllOauthTokens () {
+    public OauthTokensModel getOauthTokens(String userId) {
         try {
-            return oauthTokensRepository.findAll();
-        } catch (Exception  ex) {
-            throw new CustomException (ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return oauthTokensRepository.findByUserId(userId);
+        } catch (Exception ex) {
+            throw new CustomException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public OauthTokensModel createOauthTokens (OauthTokensModel oauthTokensModel) {
+    public OauthTokensModel createOauthTokens(OauthTokensModel oauthTokensModel) {
         try {
             return oauthTokensRepository.save(oauthTokensModel);
-        } catch (Exception  ex) {
-            throw new CustomException ("Error saving oauth tokens: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception ex) {
+            throw new CustomException("Error saving oauth tokens: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public OauthTokensModel deleteOauthTokens (OauthTokensModel oauthTokensModel) {
+    public OauthTokensModel deleteOauthTokens(OauthTokensModel oauthTokensModel) {
         try {
             oauthTokensRepository.delete(oauthTokensModel);
             return oauthTokensModel;

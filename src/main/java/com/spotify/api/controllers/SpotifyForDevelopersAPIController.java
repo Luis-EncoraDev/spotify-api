@@ -100,8 +100,7 @@ public class SpotifyForDevelopersAPIController {
     public ResponseEntity<Object> searchItems(
             Authentication authentication,
             @RequestParam String q,
-            @RequestParam List<String> type)
-    {
+            @RequestParam List<String> type) {
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
 
         String accessToken = client.getAccessToken().getTokenValue();

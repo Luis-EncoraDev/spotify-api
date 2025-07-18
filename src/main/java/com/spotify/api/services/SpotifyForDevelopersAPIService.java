@@ -58,27 +58,27 @@ public class SpotifyForDevelopersAPIService {
     }
 
     public ArtistPopularTracksDTO getArtistPopularTracks(String accessToken, String artistId) {
-            try{
-                return spotifyRestClient.get()
-                        .uri("https://api.spotify.com/v1/artists/" + artistId + "/top-tracks")
-                        .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-                        .retrieve()
-                        .body(ArtistPopularTracksDTO.class);
-            } catch (RestClientException ex) {
-                throw new CustomException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        try {
+            return spotifyRestClient.get()
+                    .uri("https://api.spotify.com/v1/artists/" + artistId + "/top-tracks?market=ES")
+                    .header("Accept", MediaType.APPLICATION_JSON_VALUE)
+                    .retrieve()
+                    .body(ArtistPopularTracksDTO.class);
+        } catch (RestClientException ex) {
+            throw new CustomException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public ArtistAlbumsResponseDTO getArtistAlbums(String accessToken, String artistId, String limit) {
-            try {
-                return spotifyRestClient.get()
-                        .uri("https://api.spotify.com/v1/artists/" + artistId + "/albums?market=ES&limit=" + limit)
-                        .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-                        .retrieve()
-                        .body(ArtistAlbumsResponseDTO.class);
-            } catch (RestClientException ex) {
-                throw new CustomException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        try {
+            return spotifyRestClient.get()
+                    .uri("https://api.spotify.com/v1/artists/" + artistId + "/albums?market=ES&limit=" + limit)
+                    .header("Accept", MediaType.APPLICATION_JSON_VALUE)
+                    .retrieve()
+                    .body(ArtistAlbumsResponseDTO.class);
+        } catch (RestClientException ex) {
+            throw new CustomException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public AlbumDTO getAlbum(String accessToken, String id) {

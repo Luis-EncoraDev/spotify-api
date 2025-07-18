@@ -8,6 +8,8 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.support.HttpRequestWrapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestClient;
 
 @Configuration
@@ -22,7 +24,8 @@ public class RestClientConfig {
     public RestClient spotifyRestClient() {
         return RestClient.builder()
                 .requestInterceptor((request, body, execution) -> {
-                    String accessToken = oauthTokensService.getAllOauthTokens().getFirst().getAccessToken();
+                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                    String accessToken = oauthTokensService.getOauthTokens(authentication.getName()).getAccessToken();
 
                     // Set Authorization header
                     request.getHeaders().setBearerAuth(accessToken);
