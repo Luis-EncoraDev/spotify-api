@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 @RestController
-@RequestMapping("/api/oauthTokens")
+@RequestMapping("/oauthTokens")
 public class OauthTokensController {
 
     private final OauthTokensService oauthTokensService;

@@ -57,13 +57,14 @@ public class SpotifyForDevelopersAPIService {
 
     }
 
-    public ArtistPopularTracksDTO getArtistPopularTracks(String accessToken, String artistId) {
+    public ArtistPopularTracksDTO getArtistPopularTracks(String accessToken, String id) {
         try {
-            return spotifyRestClient.get()
-                    .uri("https://api.spotify.com/v1/artists/" + artistId + "/top-tracks?market=ES")
+            ArtistPopularTracksDTO tracks = spotifyRestClient.get()
+                    .uri("https://api.spotify.com/v1/artists/"+ id + "/top-tracks?market=US")
                     .header("Accept", MediaType.APPLICATION_JSON_VALUE)
                     .retrieve()
                     .body(ArtistPopularTracksDTO.class);
+            return tracks;
         } catch (RestClientException ex) {
             throw new CustomException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

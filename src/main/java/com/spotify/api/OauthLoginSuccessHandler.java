@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
@@ -19,11 +20,14 @@ public class OauthLoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final OAuth2AuthorizedClientService clientService;
     private final OauthTokensService oauthTokensService;
+    private final JwtUtil jwtUtil;
 
     public OauthLoginSuccessHandler(OAuth2AuthorizedClientService clientService,
-                                     OauthTokensService oauthTokensService) {
+                                     OauthTokensService oauthTokensService,
+                                    JwtUtil jwtUtil) {
         this.clientService = clientService;
         this.oauthTokensService = oauthTokensService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -31,6 +35,8 @@ public class OauthLoginSuccessHandler implements AuthenticationSuccessHandler {
                                         HttpServletResponse response,
                                         Authentication authentication)
             throws IOException, ServletException {
+
+        String jwtToken = jwtUtil.generateToken(authentication.getName());
 
         OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(
                 "spotify", authentication.getName());
@@ -56,8 +62,7 @@ public class OauthLoginSuccessHandler implements AuthenticationSuccessHandler {
             oauthTokensService.createOauthTokens(model);
         }
 
-        // Redirect to homepage or wherever you want after login
-        response.sendRedirect("/");
+        response.sendRedirect("http://localhost:5173/oauth2/callback?token=" + jwtToken);
     }
 }
 

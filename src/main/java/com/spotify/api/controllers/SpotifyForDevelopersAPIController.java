@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class SpotifyForDevelopersAPIController {
 
     private final SpotifyForDevelopersAPIService spotifyForDevelopersAPIService;
@@ -54,13 +54,29 @@ public class SpotifyForDevelopersAPIController {
         return new ResponseEntity<>(artist, HttpStatus.OK);
     }
 
-    @GetMapping("/artists/{artistId}/popularTracks")
+    @GetMapping("artists/{artistId}/top-tracks")
     public ResponseEntity<ArtistPopularTracksDTO> getArtistPopularTracks(Authentication authentication, @PathVariable String artistId) {
-        OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
+        try {
+            OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
 
-        String accessToken = client.getAccessToken().getTokenValue();
-        ArtistPopularTracksDTO artistTopTracks = spotifyForDevelopersAPIService.getArtistPopularTracks(accessToken, artistId);
-        return new ResponseEntity<>(artistTopTracks, HttpStatus.OK);
+            String accessToken = client.getAccessToken().getTokenValue();
+            ArtistPopularTracksDTO artistTopTracks = spotifyForDevelopersAPIService.getArtistPopularTracks(accessToken, artistId);
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println("----------------------------------------");
+            System.out.println("Artist top tracks:");
+            System.out.println(artistTopTracks.getTracks().stream().map(track -> track.getName()));
+            System.out.println("----------------------------------------");
+            System.out.println();
+            System.out.println();
+            System.out.println();
+
+            return new ResponseEntity<>(artistTopTracks, HttpStatus.OK);
+        } catch (Exception ex) {
+            throw new CustomException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @GetMapping("/artists/{artistId}/albums")
