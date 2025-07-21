@@ -2,6 +2,7 @@ package com.spotify.api.controllers;
 
 import com.spotify.api.CustomException;
 import com.spotify.api.DTOs.*;
+import com.spotify.api.DTOs.SearchResponseDTOs.SearchResponseDTO;
 import com.spotify.api.services.SpotifyForDevelopersAPIService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class SpotifyForDevelopersAPIController {
 
     private final SpotifyForDevelopersAPIService spotifyForDevelopersAPIService;
@@ -113,16 +115,16 @@ public class SpotifyForDevelopersAPIController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> searchItems(
+    public ResponseEntity<SearchResponseDTO> searchItems(
             Authentication authentication,
             @RequestParam String q,
-            @RequestParam List<String> type) {
+            @RequestParam String type) {
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
 
         String accessToken = client.getAccessToken().getTokenValue();
         ItemsSearchRequestDTO searchRequest = new ItemsSearchRequestDTO(q, type);
 
-        Object searchResults = spotifyForDevelopersAPIService.searchItem(accessToken, searchRequest);
+        SearchResponseDTO searchResults = spotifyForDevelopersAPIService.searchItem(accessToken, searchRequest);
         return new ResponseEntity<>(searchResults, HttpStatus.OK);
     }
 
