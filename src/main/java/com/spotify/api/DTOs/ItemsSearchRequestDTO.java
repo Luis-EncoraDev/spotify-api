@@ -4,17 +4,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 
 public class ItemsSearchRequestDTO {
     private String query;
-    private List<String> types;
+    private String types;
 
-    public ItemsSearchRequestDTO(String query, List<String> types) {
+    public ItemsSearchRequestDTO(String query, String types) {
         this.query = query;
         this.types = types;
     }

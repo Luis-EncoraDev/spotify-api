@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,4 +18,5 @@ public class TrackDTO {
     private String preview_url;
     private boolean is_playable;
     private AlbumDTO album;
+    private List<TrackArtistDTO> artists;
 }
