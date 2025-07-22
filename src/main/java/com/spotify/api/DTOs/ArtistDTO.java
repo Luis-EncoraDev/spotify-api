@@ -16,4 +16,5 @@ public class ArtistDTO {
     private String name;
     private List<ImageDTO> images;
     private List<String> genres;
+    private ArtistFollowers followers;
 }

@@ -78,11 +78,10 @@ public class SpotifyForDevelopersAPIController {
         } catch (Exception ex) {
             throw new CustomException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @GetMapping("/artists/{artistId}/albums")
-    public ResponseEntity<ArtistAlbumsResponseDTO> getArtistAlbums(Authentication authentication, @PathVariable String artistId, @RequestParam(defaultValue = "9") String limit) {
+    public ResponseEntity<ArtistAlbumsResponseDTO> getArtistAlbums(Authentication authentication, @PathVariable String artistId, @RequestParam(defaultValue = "10") String limit) {
         try {
             OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient("spotify", authentication.getName());
             String accessToken = client.getAccessToken().getTokenValue();

@@ -14,7 +14,7 @@ import java.util.Date;
 public class JwtUtil {
 
     //private static final SecretKey secretKey = Keys.hmacShaKeyFor(System.getenv("JWT_SECRET").getBytes());
-    private static final int expirationMs = 3600000;
+    private static final int expirationMs = 360000000;
     static SecretKey jwtSecret = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     public String generateToken (String userId) {
