@@ -2,7 +2,6 @@ package com.spotify.api.DTOs;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
 
 @Getter
