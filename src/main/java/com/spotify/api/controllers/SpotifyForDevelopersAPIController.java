@@ -92,7 +92,7 @@ public class SpotifyForDevelopersAPIController {
         }
 
     }
-
+    
     @GetMapping("/albums/{id}")
     public ResponseEntity<AlbumDTO> getAlbum(Authentication authentication, @PathVariable String id) {
 

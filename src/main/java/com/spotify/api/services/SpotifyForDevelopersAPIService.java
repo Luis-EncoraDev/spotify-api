@@ -121,7 +121,7 @@ public class SpotifyForDevelopersAPIService {
                             searchRequest.getQuery() +
                             "&type=" +
                             searchRequest.getTypes() +
-                            "&limit=3"
+                            "&limit=10"
                     )
                     .header("Accept", MediaType.APPLICATION_JSON_VALUE)
                     .retrieve()
